@@ -8,9 +8,9 @@ A modular, multi-round evaluation framework designed to assess LLMs as data scie
 
 MedallionBench simulates the Numerai tournament experience, where participants develop machine learning models to predict stock market performance. The framework tests LLMs across four phases:
 
-- **Phase 1-2**: Data exploration & model development (rounds 1-20)
-- **Phase 3**: Research synthesis & documentation (rounds 21-25)  
-- **Phase 4**: Long-horizon coherence & memory ablations (rounds 26-40)
+- **Phase 1-2**: Data exploration & model development 
+- **Phase 3**: Research synthesis & documentation 
+- **Phase 4**: Long-horizon coherence & memory ablations
 
 ## Features
 
@@ -160,11 +160,10 @@ This is a skeleton implementation that provides the basic structure for Medallio
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
 
 ## Citation
 
@@ -174,7 +173,7 @@ If you use MedallionBench in your research, please cite:
 @misc{medallion-bench,
   title={MedallionBench: LLM ML Research Capability Evaluation Framework},
   author={MedallionBench Contributors},
-  year={2024},
+  year={2025},
   url={https://github.com/your-org/medallion-bench}
 }
 ```

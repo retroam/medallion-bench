@@ -31,9 +31,15 @@ def numerai_data_tool() -> Tool:
         Returns:
             String description of loaded data
         """
-        # TODO: Implement actual Numerai data loading
-        # This would integrate with the Numerai API or local data files
-        return f"Loaded {dataset} dataset with {era_range or 'all'} eras"
+        # MVP: Simple mock data response
+        if dataset == "training":
+            return f"✓ Loaded training dataset: 500,000 rows × 1,050 features across eras {era_range or '1-120'}\n- Target: 'target' (numerical, 0-1 range)\n- Features: feature_intelligence1-1050 (normalized)\n- Eras: 120 training eras available"
+        elif dataset == "validation":
+            return f"✓ Loaded validation dataset: 100,000 rows × 1,050 features across eras {era_range or '121-140'}\n- Same structure as training\n- Use for model validation and feature selection"
+        elif dataset == "tournament":
+            return f"✓ Loaded tournament dataset: 5,000 rows × 1,050 features\n- Live tournament data for predictions\n- No target values (this is what you predict)"
+        else:
+            return f"Unknown dataset type: {dataset}"
     
     return load_numerai_data
 
@@ -76,8 +82,8 @@ def scratchpad_tool() -> Tool:
         # TODO: Implement persistent storage
         return f"Retrieved notes for round {round_num} in category {category}"
     
-    # Return multiple functions as a tool
-    return [write_note, read_notes]
+    # Return single function for MVP
+    return write_note
 
 
 @tool
@@ -111,7 +117,8 @@ def kv_tool() -> Tool:
         # TODO: Implement persistent KV storage
         return f"Retrieved {key} for round {round_num}"
     
-    return [store_kv, retrieve_kv]
+    # Return single function for MVP
+    return store_kv
 
 
 @tool
@@ -135,8 +142,40 @@ def model_training_tool() -> Tool:
         Returns:
             Training results and model performance
         """
-        # TODO: Implement model training with seed control
-        return f"Trained {model_type} model with {len(features)} features"
+        # MVP: Simulate model training with realistic results
+        import random
+        random.seed(seed)
+        
+        # Simulate training time based on complexity
+        feature_count = len(features)
+        
+        # Mock performance metrics based on model type and features
+        if model_type == "xgboost":
+            base_score = 0.52 + random.uniform(-0.02, 0.02)
+            training_time = feature_count * 0.1
+        elif model_type == "lightgbm":
+            base_score = 0.51 + random.uniform(-0.02, 0.02)  
+            training_time = feature_count * 0.08
+        elif model_type == "neural_net":
+            base_score = 0.53 + random.uniform(-0.03, 0.03)
+            training_time = feature_count * 0.2
+        else:
+            base_score = 0.50 + random.uniform(-0.01, 0.01)
+            training_time = feature_count * 0.05
+            
+        correlation = base_score + random.uniform(-0.01, 0.01)
+        
+        return f"""✓ Model Training Complete
+Model: {model_type}
+Features: {feature_count} selected
+Hyperparameters: {hyperparameters}
+Seed: {seed}
+
+Performance:
+- Training Correlation: {correlation:.4f}
+- Training Time: {training_time:.1f}s
+- Model Size: {feature_count * 8}KB
+- Status: Ready for validation"""
     
     async def evaluate_model(
         model_id: str,
@@ -151,10 +190,37 @@ def model_training_tool() -> Tool:
         Returns:
             Model evaluation metrics
         """
-        # TODO: Implement model evaluation
-        return f"Evaluated model {model_id} on {dataset}"
+        # MVP: Simulate model evaluation with realistic metrics
+        import random
+        
+        # Simulate evaluation based on dataset
+        if dataset == "validation":
+            correlation = 0.045 + random.uniform(-0.01, 0.01)
+            sharpe = 1.2 + random.uniform(-0.3, 0.3)
+            max_drawdown = random.uniform(0.05, 0.15)
+        elif dataset == "tournament":
+            correlation = 0.03 + random.uniform(-0.01, 0.01)  # Lower on live data
+            sharpe = 0.8 + random.uniform(-0.2, 0.2)
+            max_drawdown = random.uniform(0.08, 0.20)
+        else:
+            correlation = 0.02 + random.uniform(-0.005, 0.005)
+            sharpe = 0.5 + random.uniform(-0.1, 0.1)
+            max_drawdown = random.uniform(0.10, 0.25)
+            
+        return f"""✓ Model Evaluation Results
+Model: {model_id}
+Dataset: {dataset}
+
+Performance Metrics:
+- Correlation: {correlation:.4f}
+- Sharpe Ratio: {sharpe:.2f}
+- Max Drawdown: {max_drawdown:.2%}
+- Feature Exposure: 0.12
+- MMC (Mean): 0.002
+- Status: {'Strong' if correlation > 0.04 else 'Moderate' if correlation > 0.02 else 'Weak'}"""
     
-    return [train_model, evaluate_model]
+    # Return single function for MVP
+    return train_model
 
 
 @tool
@@ -218,7 +284,8 @@ def business_sim_tool() -> Tool:
         # TODO: Implement risk calculations
         return f"Risk metrics for round {round_num}"
     
-    return [update_bankroll, calculate_risk_metrics]
+    # Return single function for MVP
+    return update_bankroll
 
 
 @tool
@@ -261,7 +328,8 @@ def vector_memory_tool() -> Tool:
         # TODO: Implement vector similarity search
         return f"Retrieved {k} similar memories for query: {query}"
     
-    return [store_memory, retrieve_memory]
+    # Return single function for MVP
+    return store_memory
 
 
 # Tool factory functions to match the expected interface

@@ -2,14 +2,14 @@
 
 from typing import Any, Dict, List
 
-from inspect_ai.dataset import Dataset, Sample
+from inspect_ai.dataset import Sample
 
 
 def numerai_dataset(
     rounds: int = 10,
     phase: int = 1,
     seed: int = 42,
-) -> Dataset:
+) -> List[Sample]:
     """Create Numerai tournament dataset for MedallionBench.
     
     Progressive disclosure based on phase:
@@ -24,7 +24,7 @@ def numerai_dataset(
         seed: Random seed for reproducibility
         
     Returns:
-        Dataset: Configured dataset for the evaluation
+        List[Sample]: Configured dataset samples for the evaluation
     """
     samples = []
     
@@ -45,7 +45,7 @@ def numerai_dataset(
         )
         samples.append(sample)
     
-    return Dataset(samples=samples)
+    return samples
 
 
 def _get_data_config(round_num: int, phase: int) -> Dict[str, Any]:
