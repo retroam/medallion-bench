@@ -25,7 +25,14 @@ class TechnicalScorer(Scorer):
             Score: Technical quality score (0-1)
         """
         # MVP: Basic scoring based on agent output and tool usage
-        output = state.output.completion if hasattr(state.output, 'completion') else str(state.output)
+        if hasattr(state, "output"):
+            output = (
+                state.output.completion
+                if hasattr(state.output, "completion")
+                else str(state.output)
+            )
+        else:
+            output = ""
         
         # Check for key technical elements in the response
         score_components = {
@@ -76,7 +83,14 @@ class MethodologyScorer(Scorer):
             Score: Methodology quality score (0-1)
         """
         # MVP: Basic methodology scoring based on agent output
-        output = state.output.completion if hasattr(state.output, 'completion') else str(state.output)
+        if hasattr(state, "output"):
+            output = (
+                state.output.completion
+                if hasattr(state.output, "completion")
+                else str(state.output)
+            )
+        else:
+            output = ""
         
         # Check for key methodology elements
         methodology_components = {
