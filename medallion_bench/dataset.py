@@ -1,37 +1,40 @@
 """Numerai dataset handling for MedallionBench."""
 
-from typing import Any, Dict, List
+from __future__ import annotations
 
-from inspect_ai.dataset import Sample
+from typing import Any, Dict
+
+from inspect_ai.dataset import Dataset, MemoryDataset, Sample
 
 
 def numerai_dataset(
     rounds: int = 10,
     phase: int = 1,
     seed: int = 42,
-) -> List[Sample]:
+) -> Dataset:
     """Create Numerai tournament dataset for MedallionBench.
-    
+
     Progressive disclosure based on phase:
     - Phase 1 (rounds 1-10): Basic training & validation sample
     - Phase 2 (rounds 11-20): Full training, validation, feature metadata
     - Phase 3 (rounds 21-25): Tournament-era data, meta-model info
     - Phase 4 (rounds 26-40): All historical tournaments & regime labels
-    
+
     Args:
         rounds: Number of tournament rounds to simulate
         phase: Which phase determines data availability
         seed: Random seed for reproducibility
-        
+
     Returns:
-        List[Sample]: Configured dataset samples for the evaluation
+        Dataset: Configured dataset samples for the evaluation
     """
-    samples = []
-    
+
+    samples: list[Sample] = []
+
     for round_num in range(1, rounds + 1):
         # Determine data availability based on phase
         data_config = _get_data_config(round_num, phase)
-        
+
         sample = Sample(
             id=f"round_{round_num}",
             input=_create_round_prompt(round_num, data_config),
@@ -44,8 +47,12 @@ def numerai_dataset(
             },
         )
         samples.append(sample)
-    
-    return samples
+
+    return MemoryDataset(
+        samples=samples,
+        name="MedallionBench Numerai Tournament",
+        location="simulated",
+    )
 
 
 def _get_data_config(round_num: int, phase: int) -> Dict[str, Any]:
@@ -145,4 +152,8 @@ Begin your analysis and model development now.
 
 def _create_round_target(round_num: int) -> str:
     """Create the target/expected output for a tournament round."""
-    return f"Successfully complete Round {round_num} with data analysis, model development, and strategic decision-making."
+
+    return (
+        "Successfully complete Round "
+        f"{round_num} with data analysis, model development, and strategic decision-making."
+    )

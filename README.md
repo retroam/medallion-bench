@@ -37,19 +37,58 @@ pip install medallion-bench[numerai]
 pip install medallion-bench[all]
 ```
 
-## Quick Start
+## Running MedallionBench
+
+The framework exposes a single `medallion_bench` task factory that can be
+executed with any [Inspect AI](https://github.com/openai/inspect_ai) compatible
+model. The examples below assume you have already configured credentials for
+your chosen model provider (for example by exporting `OPENAI_API_KEY`).
+
+### Python API
 
 ```python
 from medallion_bench import medallion_bench
 from inspect_ai import eval
 
-# Run basic evaluation (Phase 1, 10 rounds)
-task = medallion_bench()
-result = eval(task, model="openai/gpt-4")
+# Phase 1 quick run (10 rounds)
+result = eval(medallion_bench(), model="openai/gpt-4o-mini")
+print(result.summary())
 
-# Run advanced evaluation (Phase 4, 40 rounds)
+# Phase 4 extended run (40 rounds)
 task = medallion_bench(rounds=40, phase=4, seed=42)
-result = eval(task, model="anthropic/claude-3-sonnet-20240229")
+result = eval(task, model="anthropic/claude-3-5-sonnet-20241022")
+print(result.summary())
+```
+
+### Inspect AI CLI
+
+Inspect AI also ships with a CLI that can execute tasks directly from the
+command line. Save any task configuration you want to tweak in a Python file,
+then point the CLI at it:
+
+```bash
+cat <<'PY' > run_medallion.py
+from medallion_bench import medallion_bench
+
+task = medallion_bench(rounds=20, phase=2, seed=7)
+PY
+
+inspect eval run_medallion.py --model openai/gpt-4o-mini
+```
+
+The CLI command prints a structured report containing overall scores plus the
+per-round scratchpad information recorded during the evaluation. Add
+`--output medallion-results.json` to persist the full result artifact.
+
+## Quick Start
+
+```python
+from medallion_bench import medallion_bench
+
+# Create a task with custom configuration
+task = medallion_bench(rounds=30, phase=3, seed=11)
+
+print(task.metadata)
 ```
 
 ## Architecture
@@ -126,16 +165,16 @@ pytest tests/test_scoring.py
 
 ```bash
 # Format code
-black src/ tests/
+black medallion_bench tests
 
 # Sort imports
-isort src/ tests/
+isort medallion_bench tests
 
 # Type checking
-mypy src/
+mypy medallion_bench
 
 # Lint
-flake8 src/ tests/
+flake8 medallion_bench tests
 ```
 
 ## Current Status

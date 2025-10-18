@@ -1,8 +1,22 @@
 """Individual scoring components for MedallionBench."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from inspect_ai.scorer import Score, Scorer, Target
+
+
+def _extract_output_text(state: Any) -> str:
+    """Safely extract textual output from an evaluation state."""
+
+    output = getattr(state, "output", None)
+    if output is None:
+        return ""
+
+    completion = getattr(output, "completion", None)
+    if completion is not None:
+        return str(completion)
+
+    return str(output)
 
 
 class TechnicalScorer(Scorer):
@@ -25,7 +39,7 @@ class TechnicalScorer(Scorer):
             Score: Technical quality score (0-1)
         """
         # MVP: Basic scoring based on agent output and tool usage
-        output = state.output.completion if hasattr(state.output, 'completion') else str(state.output)
+        output = _extract_output_text(state)
         
         # Check for key technical elements in the response
         score_components = {
@@ -76,7 +90,7 @@ class MethodologyScorer(Scorer):
             Score: Methodology quality score (0-1)
         """
         # MVP: Basic methodology scoring based on agent output
-        output = state.output.completion if hasattr(state.output, 'completion') else str(state.output)
+        output = _extract_output_text(state)
         
         # Check for key methodology elements
         methodology_components = {
