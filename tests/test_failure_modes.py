@@ -37,16 +37,16 @@ def test_regime_manager_applies_multiplier_and_noise():
 
 
 @pytest.mark.parametrize(
-    "round_num, expected",
+    "round_num, base_corr, expected",
     [
-        (211, -0.03),
-        (288, -0.03),
-        (305, 0.05),
+        (211, 0.05, -0.02),
+        (288, 0.05, -0.02),
+        (211, 0.2, 0.12),
+        (305, 0.05, 0.05),
     ],
 )
-def test_burn_period_simulator(round_num, expected):
+def test_burn_period_simulator(round_num, base_corr, expected):
     simulator = BurnPeriodSimulator(severity=0.08, floor=-0.02)
-    base_corr = 0.05
 
     result = simulator.inject_burn(round_num, base_corr)
     assert result == pytest.approx(expected)

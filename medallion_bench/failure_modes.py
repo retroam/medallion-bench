@@ -137,7 +137,7 @@ class BurnPeriodSimulator:
         for start, end in self.burn_periods:
             if start <= round_num <= end:
                 reduced = base_correlation - self.severity
-                return float(min(reduced, self.floor))
+                return float(max(reduced, self.floor))
         return float(base_correlation)
 
 
