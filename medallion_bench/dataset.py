@@ -74,12 +74,15 @@ def _get_data_config(round_num: int, phase: int) -> Dict[str, Any]:
             "validation_data": True,
         })
     
-    # Phase 2: Full data for rounds 11-20
+    # Phase 2: Full data for rounds 11-20 + failure modes
     if phase >= 2 and round_num <= 20:
         config.update({
             "training_data": True,
             "validation_data": True,
             "feature_metadata": True,
+            "failure_modes": True,
+            "regime_info": True,
+            "burn_periods": True,
         })
     
     # Phase 3: Tournament data for rounds 21-25
@@ -90,6 +93,9 @@ def _get_data_config(round_num: int, phase: int) -> Dict[str, Any]:
             "feature_metadata": True,
             "tournament_data": True,
             "meta_model_info": True,
+            "failure_modes": True,
+            "regime_info": True,
+            "burn_periods": True,
         })
     
     # Phase 4: All historical data for rounds 26-40
@@ -102,6 +108,9 @@ def _get_data_config(round_num: int, phase: int) -> Dict[str, Any]:
             "meta_model_info": True,
             "historical_tournaments": True,
             "regime_labels": True,
+            "failure_modes": True,
+            "regime_info": True,
+            "burn_periods": True,
         })
     
     return config
@@ -134,6 +143,12 @@ You are competing in the Numerai tournament as a data scientist. Your goal is to
         prompt += "- Historical tournament results and performance data\n"
     if data_config["regime_labels"]:
         prompt += "- Regime labels for understanding market conditions\n"
+    if data_config.get("failure_modes", False):
+        prompt += "- Failure mode simulation (regime changes, burn periods, feature drift)\n"
+    if data_config.get("regime_info", False):
+        prompt += "- Current market regime information\n"
+    if data_config.get("burn_periods", False):
+        prompt += "- Burn period detection and management\n"
     
     prompt += f"""
 ## Your Task
