@@ -6,13 +6,17 @@ risk management, and long-horizon coherence.
 """
 
 from .data_pipeline import NumeraiDataPipeline
+from .failure_modes import BurnPeriodSimulator, FeatureDrift, RegimeManager
 from .medallion_bench import medallion_bench
 from .tournament import NumeraiAgent, SimulatedNumeraiTournament, StakeDecision
 
 __all__ = [
     "medallion_bench",
+    "BurnPeriodSimulator",
+    "FeatureDrift",
     "NumeraiDataPipeline",
     "NumeraiAgent",
+    "RegimeManager",
     "SimulatedNumeraiTournament",
     "StakeDecision",
 ]
